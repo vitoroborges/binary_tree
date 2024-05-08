@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h2>In Order</h2>
+    <p id="inorder"></p>
+    <br>
+    <hr>
+
+    <h2>Pre Order</h2>
+    <p id="preorder"></p>
+    <br>
+    <hr>
+
+    <h2>Post Order</h2>
+    <p id="postorder"></p>
+</body>
+<script>
+    function concatenateElements(elements, containerId) {
+        const container = document.getElementById(containerId);
+
+        const concatenatedString = elements.join(', ');
+
+        container.innerHTML = concatenatedString;
+    }
+
+    function fetchInOrderTree() {
+        fetch('http://localhost:3000/inorder')
+            .then(response => response.json())
+            .then(data => {
+                data.forEach((element, index) => {
+                    data[index] = element.word;
+                });
+                concatenateElements(data, 'inorder');
+            })
+        .catch(error => console.error('Error:', error));
+}
+    function fetchPreOrderTree() {
+        fetch('http://localhost:3000/preorder')
+            .then(response => response.json())
+            .then(data => {
+                data.forEach((element, index) => {
+                    data[index] = element.word;
+                });
+                concatenateElements(data, 'preorder');
+            })
+        .catch(error => console.error('Error:', error));
+}
+    function fetchPostOrderTree() {
+        fetch('http://localhost:3000/postorder')
+            .then(response => response.json())
+            .then(data => {
+                data.forEach((element, index) => {
+                    data[index] = element.word;
+                });
+                concatenateElements(data, 'postorder');
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+    fetchInOrderTree();
+    fetchPreOrderTree();
+    fetchPostOrderTree();
+    
+</script>
+</html>
