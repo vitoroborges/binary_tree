@@ -1,29 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
- p {
-    font-family: 'Arial', sans-serif;
-    font-size: 16px;
-    line-height: 1.6;
-    color: #333;
-    margin-bottom: 20px;
-    text-align: justify;
-    padding: 20px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    background-color: #f9f9f9;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-        .words {
-
+        p {
+            font-family: 'Arial', sans-serif;
+            font-size: 16px;
+            line-height: 1.6;
+            color: #333;
+            margin-bottom: 20px;
+            text-align: justify;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
+
+        .words {}
     </style>
     <title>Document</title>
 </head>
+
 <body>
     <h2>In Order</h2>
     <p id="inorder"></p>
@@ -39,7 +39,7 @@
     <p id="postorder"></p>
 </body>
 <script>
-    function concatenateElements(elements, containerId) {
+    function concatenateElements(elements, meaning, containerId) {
         const container = document.getElementById(containerId);
 
         const concatenatedString = elements.join(', ');
@@ -54,10 +54,15 @@
                 data.forEach((element, index) => {
                     data[index] = element.word;
                 });
+                
+                const meaning = data.map((element, index) => {
+                    return element + ' (' + data[index].meaning + ')';
+                });
+
                 concatenateElements(data, 'inorder');
             })
-        .catch(error => console.error('Error:', error));
-}
+            .catch(error => console.error('Error:', error));
+    }
     function fetchPreOrderTree() {
         fetch('http://localhost:3000/preorder')
             .then(response => response.json())
@@ -67,8 +72,8 @@
                 });
                 concatenateElements(data, 'preorder');
             })
-        .catch(error => console.error('Error:', error));
-}
+            .catch(error => console.error('Error:', error));
+    }
     function fetchPostOrderTree() {
         fetch('http://localhost:3000/postorder')
             .then(response => response.json())
@@ -84,6 +89,7 @@
     fetchInOrderTree();
     fetchPreOrderTree();
     fetchPostOrderTree();
-    
+
 </script>
+
 </html>
