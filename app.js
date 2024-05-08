@@ -1,6 +1,6 @@
 import { BinarySearchTree } from "./BinarySearchTree.js";
 import express from "express";
-im":NvimTreeToggle<cr>", optsport fs from "fs";
+import fs from "fs";
 import cors from "cors"
 
 const app = express();
