@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>Árvore Binaria</h2>
+        <div class="input-group mb-3">
+            <input type="text" id="wordInput" class="form-control" placeholder="Enter word">
+            <div class="input-group-append">
+                <button onclick="insertWord()" class="btn btn-primary" type="button">Insert</button>
+                <button onclick="deleteWord()" class="btn btn-danger" type="button">Delete</button>
+                <button onclick="findWord()" class="btn btn-secondary" type="button">Find</button>
+            </div>
+        </div>
+        <h2 name="inorder">In Order</h2>
+        <div id="inorder" class="word-container"></div>
+        <br>
+        <hr>
+
+        <h2 name="preorder">Pre Order</h2>
+        <div id="preorder" class="word-container"></div>
+        <br>
+        <hr>
+
+        <h2 name="postorder">Post Order</h2>
+        <div id="postorder" class="word-container"></div>
+
+        <br>
+        <hr>
+        
+    </div>
+    
+    <script>
+        function concatenateElements(elements, containerId) {
+            const container = document.getElementById(containerId);
+
+            container.innerHTML = ""; 
+
+            elements.forEach(element => {
+                const wordBlock = document.createElement('div');
+                wordBlock.classList.add('word-block', 'alert', 'alert-primary');
+                wordBlock.textContent = element.word;
+                wordBlock.setAttribute('data-word', element.word); // Adiciona o atributo personalizado
+                wordBlock.addEventListener('click', () => showMeaningAlert(element.meaning));
+
+                container.appendChild(wordBlock);
+            });
+        }
+
+        function fetchInOrderTree() {
+            fetch('http://localhost:3000/inorder')
+                .then(response => response.json())
+                .then(data => {
+                    concatenateElements(data, 'inorder');
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        function fetchPreOrderTree() {
+            fetch('http://localhost:3000/preorder')
+                .then(response => response.json())
+                .then(data => {
+                    concatenateElements(data, 'preorder');
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        function fetchPostOrderTree() {
+            fetch('http://localhost:3000/postorder')
+                .then(response => response.json())
+                .then(data => {
+                    concatenateElements(data, 'postorder');
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        function insertWord() {
+            const wordInput = document.getElementById('wordInput');
+            const word = wordInput.value.trim();
+
+            if (word !== "") {
+                fetch('http://localhost:3000/dictionary', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body:  JSON.stringify({ word: word }),            
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data) {
+                            fetchInOrderTree();
+                            fetchPreOrderTree();
+                            fetchPostOrderTree();
+                            wordInput.value = "";
+                            alert('Palavra inserida com sucesso!');
+                        }
+                    })
+                    .catch((error) => {
+                        console.error('Error:', error);
+                    });
+            }
+        }
+
+        function deleteWord() {
+            const wordInput = document.getElementById('wordInput');
+            const word = wordInput.value.trim();
+
+            if (word !== "") {
+                fetch('http://localhost:3000/dictionary/' + word, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ word: word }),
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data) {
+                            fetchInOrderTree();
+                            fetchPreOrderTree();
+                            fetchPostOrderTree();
+                            wordInput.value = "";
+                            alert('Palavra deletada com sucesso!');
+                        }
+                    })
+                    .catch((error) => {
+                        console.error('Error:', error);
+                    });
+            }
+        }
+
+        function findWord() {
+            const word = document.getElementById('wordInput').value;
+            if(word!= ""){
+                fetch('http://localhost:3000/dictionary/' + word, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if(data){
+                            const wordblock = document.querySelector(`.word-block[data-word="${word}"]`);
+                            if(wordblock){
+                                setWordBlockColor(word, '#fdff95');
+                                scrollToCenter(wordblock);
+
+                                setTimeout(() => {
+                                    revertWordBlockColor(word);
+                                }, 3000);
+                            }
+                        }
+                    })
+            }
+        }
+
+
+        function scrollToCenter(element) {
+            element.scrollIntoView();
+
+            const viewportHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+
+            const difference = element.getBoundingClientRect().height - viewportHeight;
+
+            window.scrollBy(0, difference / 2);
+        }
+
+        function setWordBlockColor(word, color) {
+            const wordBlock = document.querySelector(`.word-block[data-word="${word}"]`);
+            wordBlock.style.backgroundColor = color;
+        }
+
+        function revertWordBlockColor(word) {
+            setWordBlockColor(word, '#cce5ff');
+        }
+
+        function showMeaningAlert(meaning) {
+            alert(meaning);
+        }
+
+        fetchInOrderTree();
+        fetchPreOrderTree();
+        fetchPostOrderTree();
+
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
+
