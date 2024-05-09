@@ -5,12 +5,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+.seta-cima {
+    position: fixed;
+    bottom: 20px; 
+    right: 20px; 
+    cursor: pointer; 
+    width: 50px; 
+    height: 50px; 
+    background: #333; 
+    color: white; 
+    text-align: center; 
+    line-height: 50px; 
+    border-radius: 25px; 
+    box-shadow: 0 0 10px rgba(0,0,0,0.5); 
+    transform: rotate(135deg); 
+    transition: transform 0.3s ease; 
+}
+
+    </style>
 </head>
 <body>
     <div class="container mt-5">
+        <div class="seta-cima" id="seta-cima">⭡</div>
         <h2>Árvore Binaria</h2>
         <div class="input-group mb-3">
-            <input type="text" id="wordInput" class="form-control" placeholder="Enter word">
+            <input type="text" id="wordInput" class="form-control" placeholder="Insira a palavra">
             <div class="input-group-append">
                 <button onclick="insertWord()" class="btn btn-primary" type="button">Insert</button>
                 <button onclick="deleteWord()" class="btn btn-danger" type="button">Delete</button>
@@ -155,6 +175,8 @@
                                 setTimeout(() => {
                                     revertWordBlockColor(word);
                                 }, 3000);
+                            } else {
+                                alert('Palavra não encontrada!');
                             }
                         }
                     })
@@ -189,6 +211,14 @@
         fetchPreOrderTree();
         fetchPostOrderTree();
 
+        document.addEventListener('DOMContentLoaded', function() {
+            var setaCima = document.getElementById('seta-cima');
+
+            setaCima.onclick = function() {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            };
+        });
+
     </script>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
@@ -196,4 +226,3 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
-
